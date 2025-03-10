@@ -2,7 +2,7 @@
     import * as caesar from "$lib/ciphers/caesar";
     import LanguageSelect from "$lib/components/languageSelect.svelte";
     import {languages} from "$lib/util/lang";
-    import EncryptMenu from "$lib/components/encryptMenu.svelte";
+    import TabMenu from "$lib/components/tabMenu.svelte";
 
     let text = $state("");
     let shift = $state(1);
@@ -10,9 +10,11 @@
     let output = $state("");
 </script>
 
-<EncryptMenu
-    encryptFunc={() => output = caesar.encrypt(text, shift, lang.alphabet)}
-    decryptFunc={() => output = caesar.decrypt(text, shift, lang.alphabet)}
+<TabMenu
+    content={[
+        {name: "Encrypt", func: () => output = caesar.encrypt(text, shift, lang.alphabet)},
+        {name: "Decrypt", func: () => output = caesar.decrypt(text, shift, lang.alphabet)},
+    ]}
 />
 
 <div>

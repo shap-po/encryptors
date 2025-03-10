@@ -2,7 +2,7 @@
     import * as vigenere from "$lib/ciphers/vigenere";
     import LanguageSelect from "$lib/components/languageSelect.svelte";
     import {languages} from "$lib/util/lang";
-    import EncryptMenu from "$lib/components/encryptMenu.svelte";
+    import TabMenu from "$lib/components/tabMenu.svelte";
 
     let text = $state("");
     let key = $state("");
@@ -10,9 +10,11 @@
     let output = $state("");
 </script>
 
-<EncryptMenu
-    encryptFunc={() => output = vigenere.encrypt(text, key, lang.alphabet)}
-    decryptFunc={() => output = vigenere.decrypt(text, key, lang.alphabet)}
+<TabMenu
+    content={[
+        {name: "Encrypt", func: () => output = vigenere.encrypt(text, key, lang.alphabet)},
+        {name: "Decrypt", func: () => output = vigenere.decrypt(text, key, lang.alphabet)},
+    ]}
 />
 
 <div>
