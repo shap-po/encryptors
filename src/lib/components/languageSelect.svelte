@@ -1,11 +1,16 @@
 <script lang="ts">
-    import {detectLanguage, languages} from "$lib/util/lang";
+    import {detectLanguage, type Language, languages} from "$lib/util/lang";
 
     let {
         rawKey = $bindable("auto"),
         key = $bindable("en"),
         value = $bindable(languages.en),
         text = $bindable(""), // text to detect language from
+    }: {
+        rawKey?: string,
+        key?: string,
+        value?: Language,
+        text?: string,
     } = $props();
 
     let autoDetected = $derived(detectLanguage(text));
