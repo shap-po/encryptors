@@ -1,4 +1,4 @@
-export function calculateFrequencies(text: string, sampleSize: number, alphabet: string): Map<string, number> {
+export function calculateLetterFrequencies(text: string, sampleSize: number, alphabet: string): Map<string, number> {
     const freqMap = new Map<string, number>();
     const textArr = text.toLowerCase().split('');
 
@@ -19,6 +19,27 @@ export function calculateFrequencies(text: string, sampleSize: number, alphabet:
         const sampleStr = sampleArr.join('');
         const count = freqMap.get(sampleStr) || 0;
         freqMap.set(sampleStr, count + 1);
+    }
+
+    return freqMap;
+}
+
+const SPECIAL_WORD_CHARACTERS = '-';
+
+export function calculateWordFrequencies(text: string, sampleSize: number, alphabet: string): Map<string, number> {
+    const freqMap = new Map<string, number>();
+    const textArr = text.toLowerCase()
+        .replaceAll(/\s+/g, ' ')
+        .trim()
+        .split('')
+        .filter(c => alphabet.includes(c) || SPECIAL_WORD_CHARACTERS.includes(c) || c === ' ')
+        .join('')
+        .split(' ');
+
+    for (let i = 0; i < textArr.length - sampleSize + 1; i++) {
+        const sample = textArr.slice(i, i + sampleSize).join(' ');
+        const count = freqMap.get(sample) || 0;
+        freqMap.set(sample, count + 1);
     }
 
     return freqMap;
