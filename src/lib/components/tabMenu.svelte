@@ -2,11 +2,13 @@
     let {
         content,
         hasAuto = true,
+        autoLabel = $bindable("Auto"),
         auto = $bindable(hasAuto),
         selected = $bindable(0),
     }: {
         content: { name: string, func: () => void }[],
         hasAuto?: boolean,
+        autoLabel?: string,
         auto?: boolean,
         selected?: number,
     } = $props();
@@ -36,7 +38,7 @@
 
     {#if hasAuto}
         <input type="checkbox" bind:checked={auto} name="auto">
-        <label for="auto">Auto encrypt/decrypt</label>
+        <label for="auto">{autoLabel}</label>
     {/if}
 </div>
 
