@@ -4,6 +4,8 @@ A collection of encryption algorithms implemented in JS with SvelteKit frontend.
 
 ## How to run
 
+1. Make sure you have [bun](https://bun.sh/) installed. You *should* be able to use `npm` or any other Node.js-compatible package manager instead.
+
 1. Clone the repository
 
     ```bash
@@ -14,11 +16,11 @@ A collection of encryption algorithms implemented in JS with SvelteKit frontend.
 
     ```bash
     cd encryptors
-    npm install
+    bun install
     ```
 
 1. Run the project
 
     ```bash
-    npm run dev
+    bun run dev
     ```
