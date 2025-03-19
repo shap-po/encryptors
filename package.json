@@ -33,6 +33,7 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@sveltejs/adapter-static": "^3.0.8",
 		"@types/file-saver": "^2.0.7",
 		"file-saver": "^2.0.5",
 		"jszip": "^3.10.1"
