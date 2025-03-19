@@ -1,4 +1,6 @@
 <script lang="ts">
+    import {Button, ButtonGroup} from "flowbite-svelte";
+
     let {
         content,
         hasAuto = true,
@@ -28,24 +30,18 @@
     });
 </script>
 
-<div>
+<ButtonGroup>
     {#each content as {name}, i}
-        <button
+        <Button
             disabled={auto && selected === i}
             onclick={() => stateChange(i)}
-        >{name}</button>
+        >{name}</Button>
     {/each}
 
     {#if hasAuto}
-        <input type="checkbox" bind:checked={auto} name="auto">
-        <label for="auto">{autoLabel}</label>
+        <div class="p-1">
+            <input type="checkbox" bind:checked={auto} name="auto">
+            <label for="auto">{autoLabel}</label>
+        </div>
     {/if}
-</div>
-
-<style>
-    div {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-    }
-</style>
+</ButtonGroup>

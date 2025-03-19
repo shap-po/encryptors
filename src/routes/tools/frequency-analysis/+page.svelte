@@ -6,6 +6,7 @@
     import saveAs from "file-saver";
     import JSZip from "jszip";
     import TabMenu from "$lib/components/tabMenu.svelte";
+    import {Button, ButtonGroup, Checkbox, Input, Label, Textarea} from 'flowbite-svelte';
 
     const MAX_FREQ_FOR_HISTOGRAM = 50;
 
@@ -72,16 +73,16 @@
     selected={mode}
 />
 
-<textarea bind:value={text}></textarea>
-<input type="number" min="1" step="1" bind:value={sampleSize}>
+<Textarea bind:value={text}></Textarea>
+<Input type="number" min="1" step="1" bind:value={sampleSize}/>
 <LanguageSelect bind:value={lang} text={text}/>
 <div>
-    <input type="checkbox" bind:checked={normalized} name="normalized">
-    <label for="normalized">Show percentages</label>
+    <Checkbox bind:checked={normalized} name="normalized"/>
+    <Label for="normalized">Show percentages</Label>
 </div>
 <div>
-    <input type="checkbox" bind:checked={sorted} name="sorted">
-    <label for="sorted">Sort</label>
+    <Checkbox bind:checked={sorted} name="sorted"/>
+    <Label for="sorted">Sort</Label>
 </div>
 
 {#if showHistogram}
@@ -92,13 +93,8 @@
         barLabels={barLabels}
     />
 {/if}
-<button onclick={()=>exportData(sortedFrequencies)}>Export Data</button>
-<button onclick={generateStats}>Generate Stats</button>
 
-<style>
-    textarea {
-        width: 100%;
-        height: 10rem;
-        resize: vertical;
-    }
-</style>
+<ButtonGroup class="justify-center">
+    <Button onclick={()=>exportData(sortedFrequencies)}>Export Data</Button>
+    <Button onclick={generateStats}>Generate Stats</Button>
+</ButtonGroup>

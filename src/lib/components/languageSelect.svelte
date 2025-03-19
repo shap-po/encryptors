@@ -1,5 +1,6 @@
 <script lang="ts">
     import {detectLanguage, type Language, languages} from "$lib/util/lang";
+    import {Select} from "flowbite-svelte";
 
     let {
         rawKey = $bindable("auto"),
@@ -15,6 +16,13 @@
 
     let autoDetected = $derived(detectLanguage(text));
     let customAlphabet = $state("");
+    let values = $derived([
+        {value: "auto", name: `Auto detect (${languages[autoDetected].name})`},
+        ...Object.keys(languages).map(k => {
+            return {value: k, name: languages[k].name}
+        }),
+        {value: "custom", name: "Custom"},
+    ]);
 
     // detect language on text change
     $effect(() => {
@@ -23,13 +31,7 @@
     });
 </script>
 
-<select bind:value={rawKey}>
-    <option value="auto">Auto detect ({languages[autoDetected].name})</option>
-    {#each Object.keys(languages) as lang (lang)}
-        <option value={lang}>{languages[lang].name}</option>
-    {/each}
-    <option value="custom">Custom</option>
-</select>
+<Select bind:value={rawKey} items={values}/>
 
 {#if rawKey === "custom"}
     <input type="text" bind:value={customAlphabet}>
