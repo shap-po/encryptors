@@ -3,7 +3,7 @@
     import LanguageSelect from "$lib/components/languageSelect.svelte";
     import {languages} from "$lib/util/lang";
     import TabMenu from "$lib/components/tabMenu.svelte";
-
+    import PlaintextInput from "$lib/components/plaintextInput.svelte";
     import {Input, Textarea} from 'flowbite-svelte';
 
     let text = $state("");
@@ -23,7 +23,7 @@
     ]}
 />
 
-<Textarea bind:value={text}></Textarea>
+<PlaintextInput bind:value={text}/>
 <Input type="number" min="1" step="1" bind:value={shift}/>
 <LanguageSelect bind:value={lang} text={text}/>
 <Textarea readonly bind:value={output}></Textarea>
