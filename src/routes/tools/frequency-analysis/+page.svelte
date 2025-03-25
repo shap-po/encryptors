@@ -6,7 +6,8 @@
     import saveAs from "file-saver";
     import JSZip from "jszip";
     import TabMenu from "$lib/components/tabMenu.svelte";
-    import {Button, ButtonGroup, Checkbox, Input, Label, Textarea} from 'flowbite-svelte';
+    import PlaintextInput from "$lib/components/plaintextInput.svelte";
+    import {Button, ButtonGroup, Checkbox, Input, Label} from 'flowbite-svelte';
 
     const MAX_FREQ_FOR_HISTOGRAM = 50;
 
@@ -77,7 +78,7 @@
     selected={mode}
 />
 
-<Textarea bind:value={text}></Textarea>
+<PlaintextInput bind:value={text} placeholder="Put text to analyse here or upload a file instead"/>
 <Input type="number" min="1" step="1" bind:value={sampleSize}/>
 <LanguageSelect bind:value={lang} text={text}/>
 <div>

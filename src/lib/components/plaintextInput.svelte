@@ -3,8 +3,10 @@
 
     let {
         value = $bindable(""),
+        placeholder = $bindable("Put plaintext here or upload a file instead"),
     }: {
         value: string,
+        placeholder?: string,
     } = $props();
 
     // allow user to upload a file instead of typing
@@ -34,5 +36,5 @@
     })
 </script>
 
-<Textarea bind:value={value} placeholder="Put plaintext here or upload a file instead"/>
+<Textarea bind:value bind:placeholder/>
 <Fileupload bind:files/>
