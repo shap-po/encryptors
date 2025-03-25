@@ -1,13 +1,16 @@
 <script lang="ts">
     import {page} from '$app/state';
-    import {Dropdown, DropdownItem, Navbar, NavLi, NavUl} from "flowbite-svelte";
+    import {Dropdown, DropdownItem, Navbar, NavBrand, NavLi, NavUl} from "flowbite-svelte";
     import {ChevronDownOutline} from 'flowbite-svelte-icons';
     import {base} from "$app/paths";
 
     let activeUrl = page.url.toString();
 </script>
 
-<Navbar>
+<Navbar navContainerClass="justify-normal">
+    <NavBrand href="{base}">
+        <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Encryptors</span>
+    </NavBrand>
     <NavUl {activeUrl}>
         <NavLi>
             Ciphers

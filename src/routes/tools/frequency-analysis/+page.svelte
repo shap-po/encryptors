@@ -65,6 +65,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Frequency analysis</title>
+</svelte:head>
+
 <TabMenu
     content={[
         {name: "Letters", func: () => frequencies = frequencyAnalysis.calculateLetterFrequencies(text, sampleSize, lang.alphabet)},

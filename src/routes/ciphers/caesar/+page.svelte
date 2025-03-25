@@ -12,6 +12,10 @@
     let output = $state("");
 </script>
 
+<svelte:head>
+    <title>Caesar cipher</title>
+</svelte:head>
+
 <TabMenu
     content={[
         {name: "Encrypt", func: () => output = caesar.encrypt(text, shift, lang.alphabet)},

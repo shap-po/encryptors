@@ -11,6 +11,10 @@
     let output = $state("");
 </script>
 
+<svelte:head>
+    <title>Vigenère cipher</title>
+</svelte:head>
+
 <TabMenu
     content={[
         {name: "Encrypt", func: () => output = vigenere.encrypt(text, key, lang.alphabet)},
