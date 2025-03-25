@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Button, ButtonGroup} from "flowbite-svelte";
+    import {Button, ButtonGroup, Toggle} from "flowbite-svelte";
 
     let {
         content,
@@ -39,9 +39,6 @@
     {/each}
 
     {#if hasAuto}
-        <div class="p-1">
-            <input type="checkbox" bind:checked={auto} name="auto">
-            <label for="auto">{autoLabel}</label>
-        </div>
+        <Toggle bind:checked={auto} class="pl-1">Auto</Toggle>
     {/if}
 </ButtonGroup>
