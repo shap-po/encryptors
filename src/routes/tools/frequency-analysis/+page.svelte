@@ -7,7 +7,8 @@
     import JSZip from "jszip";
     import TabMenu from "$lib/components/tabMenu.svelte";
     import PlaintextInput from "$lib/components/plaintextInput.svelte";
-    import {Button, ButtonGroup, Checkbox, Input, Label} from 'flowbite-svelte';
+    import FormatSelect, {formats} from "$lib/components/formatSelect";
+    import {Button, ButtonGroup, Checkbox, Input} from 'flowbite-svelte';
 
     const MAX_FREQ_FOR_HISTOGRAM = 50;
 
@@ -31,12 +32,13 @@
         [...[...sortedFrequencies.values()].map(v => v === 0 ? "" : v.toString())]
     );
 
+    let format = $state.raw(formats[0].value);
 
     function exportData(frequencies: Map<string, number>) {
         const type = mode === 0 ? "letter" : "word";
         saveAs(
-            new Blob([JSON.stringify(Object.fromEntries(frequencies))], {type: "application/json"}),
-            `${lang.name.toLowerCase()}_${sampleSize}_gram_${type}_frequencies.json`
+            new Blob([format.func(frequencies)], {type: format.type}),
+            `${lang.name.toLowerCase()}_${sampleSize}_gram_${type}_frequencies.${format.extension}`
         );
     }
 
@@ -50,13 +52,13 @@
             wordFreq.push(frequencyAnalysis.calculateWordFrequencies(text, i, lang.alphabet));
         }
 
-        const data = [...letterFreq, ...wordFreq].map(f => frequencyAnalysis.normalizeFrequencies(f))
-            .map(f => Object.fromEntries(f))
-            .map(f => JSON.stringify(f));
+        const data = [...letterFreq, ...wordFreq]
+            .map(frequencyAnalysis.sortFrequencies)
+            .map(format.func);
 
         const filenames = [
-            ...letterFreq.map((f, i) => `${lang.name.toLowerCase()}_${i + 1}_gram_letter_frequencies.json`),
-            ...wordFreq.map((f, i) => `${lang.name.toLowerCase()}_${i + 1}_gram_word_frequencies.json`)
+            ...letterFreq.map((f, i) => `${i + 1}_gram_letter_frequencies.${format.extension}`),
+            ...wordFreq.map((f, i) => `${i + 1}_gram_word_frequencies.${format.extension}`)
         ]
 
         const zip = new JSZip();
@@ -81,14 +83,9 @@
 <PlaintextInput bind:value={text} placeholder="Put text to analyse here or upload a file instead"/>
 <Input type="number" min="1" step="1" bind:value={sampleSize}/>
 <LanguageSelect bind:value={lang} text={text}/>
-<div>
-    <Checkbox bind:checked={normalized} name="normalized"/>
-    <Label for="normalized">Show percentages</Label>
-</div>
-<div>
-    <Checkbox bind:checked={sorted} name="sorted"/>
-    <Label for="sorted">Sort</Label>
-</div>
+
+<Checkbox bind:checked={normalized}>Show percentages</Checkbox>
+<Checkbox bind:checked={sorted}>Sort</Checkbox>
 
 {#if showHistogram}
     <Histogram
@@ -99,7 +96,14 @@
     />
 {/if}
 
-<ButtonGroup class="justify-center">
-    <Button onclick={()=>exportData(sortedFrequencies)}>Export Data</Button>
-    <Button onclick={generateStats}>Generate Stats</Button>
-</ButtonGroup>
+<div class="flex flex-col justify-center items-center">
+    <div>
+        <FormatSelect bind:value={format} class="mb-1"/>
+        <ButtonGroup class="justify-center">
+            <Button onclick={()=>exportData(sortedFrequencies)}>Export Data</Button>
+            <Button onclick={generateStats} title="Generate a zip-file with 1-4-gram word and letter frequencies">
+                Generate Stats
+            </Button>
+        </ButtonGroup>
+    </div>
+</div>

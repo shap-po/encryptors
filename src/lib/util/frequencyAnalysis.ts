@@ -34,7 +34,8 @@ export function calculateWordFrequencies(text: string, sampleSize: number, alpha
         .split('')
         .filter(c => alphabet.includes(c) || SPECIAL_WORD_CHARACTERS.includes(c) || c === ' ')
         .join('')
-        .split(' ');
+        .split(' ')
+        .filter(Boolean);
 
     for (let i = 0; i < textArr.length - sampleSize + 1; i++) {
         const sample = textArr.slice(i, i + sampleSize).join(' ');
