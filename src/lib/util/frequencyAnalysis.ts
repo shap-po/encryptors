@@ -24,17 +24,31 @@ export function calculateLetterFrequencies(text: string, sampleSize: number, alp
     return freqMap;
 }
 
-const SPECIAL_WORD_CHARACTERS = '-';
+// characters that are not part of the alphabet but are still considered valid
+const SPECIAL_WORD_CHARACTERS = "-'";
+// characters that have different variants but should be treated as the same
+const REPLACE_WORD_CHARACTERS: { [key: string]: string } = {
+    '`': "'",
+    '’': "'",
+};
 
 export function calculateWordFrequencies(text: string, sampleSize: number, alphabet: string): Map<string, number> {
     const freqMap = new Map<string, number>();
-    const textArr = text.toLowerCase()
+
+    text = text
+        .toLowerCase()
         .replaceAll(/\s+/g, ' ')
-        .trim()
+        .trim();
+
+    for (const [char, repl] of Object.entries(REPLACE_WORD_CHARACTERS)) {
+        text = text.replaceAll(char, repl);
+    }
+
+    const textArr = text
         .split('')
         .filter(c => alphabet.includes(c) || SPECIAL_WORD_CHARACTERS.includes(c) || c === ' ')
         .join('')
-        .split(' ')
+        .split(/\s+/)
         .filter(Boolean);
 
     for (let i = 0; i < textArr.length - sampleSize + 1; i++) {
@@ -63,4 +77,25 @@ export function normalizeFrequencies(freqMap: Map<string, number>): Map<string, 
 
 export function sortFrequencies(freqMap: Map<string, number>): Map<string, number> {
     return new Map([...freqMap.entries()].sort((a, b) => b[1] - a[1]));
+}
+
+export async function scoreText(text: string, language: string): Promise<number | null> {
+    const result = await fetch('/api/score-text', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({language, text}),
+    });
+
+    if (!result.ok) {
+        return null;
+    }
+
+    try {
+        const {score} = await result.json();
+        return score;
+    } catch {
+        return null;
+    }
 }

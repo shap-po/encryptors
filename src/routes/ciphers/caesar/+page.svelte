@@ -9,6 +9,7 @@
     let text = $state("");
     let shift = $state(1);
     let lang = $state(languages.en);
+    let langKey = $state("en");
     let output = $state("");
 </script>
 
@@ -20,10 +21,11 @@
     content={[
         {name: "Encrypt", func: () => output = caesar.encrypt(text, shift, lang.alphabet)},
         {name: "Decrypt", func: () => output = caesar.decrypt(text, shift, lang.alphabet)},
+        {name: "Analyze", func: async () => output = await caesar.analyze(text, langKey, lang.alphabet)},
     ]}
 />
 
 <PlaintextInput bind:value={text}/>
 <Input type="number" min="1" step="1" bind:value={shift}/>
-<LanguageSelect bind:value={lang} text={text}/>
+<LanguageSelect bind:value={lang} bind:key={langKey} text={text}/>
 <Textarea readonly bind:value={output}></Textarea>
