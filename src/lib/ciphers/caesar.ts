@@ -37,7 +37,7 @@ export async function analyze(text: string, language: string, alphabet: string):
     const result = await scoreTexts(variants, language);
     if (result === null) {
         return `Failed to automatically determine the best shift. Here are all the variants:
-${variants.join('\n')}`;
+${variants.map((variant, i) => `${i} - ${variant}`).join('\n')}`;
     }
 
     const shift = result.best;
