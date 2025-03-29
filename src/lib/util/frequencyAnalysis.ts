@@ -1,3 +1,5 @@
+import type {ScoreResult} from "$lib/server/tools/scoreText";
+
 export function calculateLetterFrequencies(text: string, sampleSize: number, alphabet: string): Map<string, number> {
     const freqMap = new Map<string, number>();
     const textArr = text.toLowerCase().split('');
@@ -95,6 +97,28 @@ export async function scoreText(text: string, language: string): Promise<number 
     try {
         const {score} = await result.json();
         return score;
+    } catch {
+        return null;
+    }
+}
+
+
+export async function scoreTexts(texts: string[], language: string): Promise<ScoreResult | null> {
+    const result = await fetch('/api/score-texts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({language, texts}),
+    });
+
+    if (!result.ok) {
+        return null;
+    }
+
+    try {
+        const {best, scores} = await result.json();
+        return {best, scores};
     } catch {
         return null;
     }

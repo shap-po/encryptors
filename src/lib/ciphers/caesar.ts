@@ -1,4 +1,4 @@
-import {scoreText} from "$lib/util/frequencyAnalysis";
+import {scoreTexts} from "$lib/util/frequencyAnalysis";
 
 export function encrypt(text: string, shift: number, alphabet: string): string {
     let output = "";
@@ -28,39 +28,30 @@ export function decrypt(text: string, shift: number, alphabet: string): string {
     return encrypt(text, -shift, alphabet);
 }
 
-export async function crack(text: string, language: string, alphabet: string): Promise<number> {
-    let bestShift = 0;
-    let bestScore = -Infinity;
-
-    for (let i = 0; i < alphabet.length; i++) {
-        const decrypted = decrypt(text, i, alphabet);
-        const score = await scoreText(decrypted, language);
-        console.log(`Shift: ${i}, Score: ${score}`);
-        if (score === null) {
-            continue;
-        }
-        if (score > bestScore) {
-            bestScore = score;
-            bestShift = i;
-        }
-    }
-
-    return bestShift;
-}
-
 export async function analyze(text: string, language: string, alphabet: string): Promise<string> {
     const variants = [];
-    for (let i = 1; i < alphabet.length; i++) {
-        variants.push(`${i}: ${decrypt(text, i, alphabet)}`);
+    for (let i = 0; i < alphabet.length; i++) {
+        variants.push(decrypt(text, i, alphabet));
     }
 
-    const shift = await crack(text, language, alphabet);
-    const decrypted = decrypt(text, shift, alphabet);
+    const result = await scoreTexts(variants, language);
+    if (result === null) {
+        return `Failed to automatically determine the best shift. Here are all the variants:
+${variants.join('\n')}`;
+    }
+
+    const shift = result.best;
+    const decrypted = variants[shift];
+
+    const sortedVariants = variants
+        .map((variant, i) => ({variant, shift: i, score: result.scores[i]}))
+        .sort((a, b) => b.score - a.score)
+        .map(({variant, shift, score}) => `${shift} (${score}) - ${variant}`);
 
     return `Best shift: ${shift}
 Decrypted text: ${decrypted}
 
 
-All variants:
-${variants.join('\n')}`;
+All variants sorted by score:
+${sortedVariants.join('\n')}`;
 }

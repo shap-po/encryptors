@@ -72,7 +72,12 @@ export type ScoreResult = {
 
 export function scoreTexts(freqMaps: (Map<string, number> | null)[], texts: string[], language: string): ScoreResult {
     const scores = texts.map((text) => scoreText(freqMaps, text, language));
-    const best = Math.max(...scores);
+    let best = 0;
+    for (let i = 1; i < scores.length; i++) {
+        if (scores[i] > scores[best]) {
+            best = i;
+        }
+    }
 
     return {
         best,
