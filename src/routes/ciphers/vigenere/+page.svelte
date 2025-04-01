@@ -9,6 +9,7 @@
     let text = $state("");
     let key = $state("");
     let lang = $state(languages.en);
+    let langKey = $state("en");
     let output = $state("");
 </script>
 
@@ -20,10 +21,11 @@
     content={[
         {name: "Encrypt", func: () => output = vigenere.encrypt(text, key, lang.alphabet)},
         {name: "Decrypt", func: () => output = vigenere.decrypt(text, key, lang.alphabet)},
+        {name: "Analyze", func: async () => output = await vigenere.analyze(text, langKey, lang.alphabet)},
     ]}
 />
 
 <PlaintextInput bind:value={text}/>
 <Input bind:value={key}/>
-<LanguageSelect bind:value={lang} text={text}/>
+<LanguageSelect bind:value={lang} bind:key={langKey} text={text}/>
 <Textarea readonly bind:value={output}></Textarea>
