@@ -13,15 +13,16 @@ export async function loadFrequencyMap(language: string, sampleSize: number): Pr
         return null;
     }
 
-    let freqCsv;
+    let freq;
     try {
-        freqCsv = await read(`/src/data/frequencies/lang/${language}/${sampleSize}_gram_letter_frequencies.csv`).text();
+        freq = await read(`/src/data/frequencies/lang/${language}/${sampleSize}_gram_letter_frequencies.json`).text();
     } catch {
         return null;
     }
+    freq = JSON.parse(freq) as { [key: string]: number };
 
     const freqMap = new Map<string, number>();
-    for (const [key, value] of freqCsv.split('\n').map((line) => line.split(','))) {
+    for (const [key, value] of Object.entries(freq)) {
         freqMap.set(key, Number(value));
     }
 
