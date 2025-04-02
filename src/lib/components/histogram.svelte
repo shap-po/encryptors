@@ -26,9 +26,9 @@
 </script>
 
 
-<div class="histogram" bind:clientWidth={containerWidth}>
-    <svg width={svgWidth} height={svgHeight}>
-        <g class="bars">
+<div bind:clientWidth={containerWidth} class="w-full">
+    <svg width={svgWidth} height={svgHeight} fill="currentColor" class="overflow-visible dark:text-white">
+        <g class="text-primary-600">
             {#each points as point, i}
                 <rect
                     x={i * (barWidth + padding)}
@@ -40,7 +40,7 @@
         </g>
 
         {#if labels}
-            <g class="labels">
+            <g>
                 {#each labels as label, i}
                     <text
                         x={i * (barWidth + padding) + barWidth / 2}
@@ -54,7 +54,7 @@
         {/if}
 
         {#if barLabels}
-            <g class="bar-labels">
+            <g>
                 {#each barLabels as label, i}
                     <text
                         x={i * (barWidth + padding) + barWidth / 2}
@@ -68,13 +68,3 @@
         {/if}
     </svg>
 </div>
-
-<style>
-    .histogram {
-        width: 100%;
-    }
-
-    svg {
-        overflow: visible;
-    }
-</style>
