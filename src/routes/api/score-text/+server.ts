@@ -1,7 +1,7 @@
 import {parseRequestOrThrow, z} from "$lib/server/util/api";
 import {json} from '@sveltejs/kit';
 import {languages} from "$lib/util/lang";
-import {loadAndScoreText} from "$lib/server/tools/scoreText";
+import {loadAndScoreText} from "$lib/util/frequencyAnalysis";
 
 const PostSchema = z.object({
     language: z.string().refine((val) => languages[val]),

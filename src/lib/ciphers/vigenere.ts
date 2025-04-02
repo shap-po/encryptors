@@ -1,4 +1,4 @@
-import {scoreText, scoreTexts} from "$lib/util/frequencyAnalysis";
+import {loadAndScoreText, loadAndScoreTexts, scoreText, scoreTexts} from "$lib/util/frequencyAnalysis";
 
 function use(text: string, key: string, alphabet: string, op: number): string {
     let output = "";
@@ -59,7 +59,7 @@ export async function analyze(text: string, language: string, alphabet: string):
             }
 
             const decrypted = decrypt(text, key, alphabet);
-            const score = await scoreText(decrypted, language) || 0;
+            const score = await loadAndScoreText(decrypted, language) || 0;
             return {key, decrypted, score};
         })
     ).then(values => values.filter(value => value !== null));
@@ -166,7 +166,7 @@ async function findKey(text: string, keyLength: number, language: string, alphab
             shifts.push(decrypted);
         }
 
-        const result = await scoreTexts(shifts, language);
+        const result = await loadAndScoreTexts(language, shifts);
         if (result) {
             key += alphabet[result.best];
         } else {
