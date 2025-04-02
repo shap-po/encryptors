@@ -81,6 +81,7 @@ export function sortFrequencies(freqMap: Map<string, number>): Map<string, numbe
     return new Map([...freqMap.entries()].sort((a, b) => b[1] - a[1]));
 }
 
+
 /**
  * Loads the letter frequencies for a given language and sample size
  */
@@ -92,8 +93,8 @@ export async function loadFrequencyMap(language: string, sampleSize: number): Pr
 
     let freq;
     try {
-        freq = await import(/* @vite-ignore */ `/src/data/frequencies/lang/${language}/${sampleSize}_gram_letter_frequencies.json`, {with: {type: "json"}} )
-            .then(m => m.default) as { [key: string]: number };
+        freq = (await import(`./data/frequencies/${language}/${sampleSize}_gram_letter_frequencies.json` ))
+            .default as { [key: string]: number };
     } catch {
         return null;
     }
