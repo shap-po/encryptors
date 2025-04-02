@@ -1,4 +1,4 @@
-import {loadAndScoreTexts} from "$lib/util/frequencyAnalysis";
+import {scoreTexts} from "$lib/util/frequencyAnalysis";
 
 export function encrypt(text: string, shift: number, alphabet: string): string {
     let output = "";
@@ -34,7 +34,7 @@ export async function analyze(text: string, language: string, alphabet: string):
         variants.push(decrypt(text, i, alphabet));
     }
 
-    const result = await loadAndScoreTexts(language, variants);
+    const result = await scoreTexts(language, variants);
     if (result === null) {
         return `Failed to automatically determine the best shift. Here are all the variants:
 ${variants.map((variant, i) => `${i} - ${variant}`).join('\n')}`;

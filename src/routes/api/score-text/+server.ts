@@ -1,7 +1,7 @@
 import {parseRequestOrThrow, z} from "$lib/server/util/api";
 import {json} from '@sveltejs/kit';
 import {languages} from "$lib/util/lang";
-import {loadAndScoreText} from "$lib/util/frequencyAnalysis";
+import {scoreText} from "$lib/util/frequencyAnalysis";
 
 const PostSchema = z.object({
     language: z.string().refine((val) => languages[val]),
@@ -12,7 +12,7 @@ export async function POST({request}): Promise<Response> {
     const {language, text} = await parseRequestOrThrow(request, PostSchema);
 
     const result = {
-        score: await loadAndScoreText(language, text),
+        score: await scoreText(language, text),
     };
 
     return json(result);

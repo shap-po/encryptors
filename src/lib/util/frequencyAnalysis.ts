@@ -83,8 +83,6 @@ export function sortFrequencies(freqMap: Map<string, number>): Map<string, numbe
 
 /**
  * Loads the letter frequencies for a given language and sample size
- * @param language
- * @param sampleSize
  */
 export async function loadFrequencyMap(language: string, sampleSize: number): Promise<Map<string, number> | null> {
     // make sure the language exists so we don't try to load non-existent files
@@ -102,7 +100,19 @@ export async function loadFrequencyMap(language: string, sampleSize: number): Pr
 
     const freqMap = new Map<string, number>();
     for (const [key, value] of Object.entries(freq)) {
-        freqMap.set(key, Number(value));
+        freqMap.set(key, value);
+    }
+
+    return freqMap;
+}
+
+/**
+ * Loads the scoring (log10) letter frequencies for a given language and sample size
+ */
+async function loadScoringFrequencyMap(language: string, sampleSize: number): Promise<Map<string, number> | null> {
+    const freqMap = await loadFrequencyMap(language, sampleSize);
+    if (freqMap === null) {
+        return null;
     }
 
     // calc log10 of each value
@@ -113,11 +123,11 @@ export async function loadFrequencyMap(language: string, sampleSize: number): Pr
     return freqMap;
 }
 
-export async function loadFrequencyMaps(language: string): Promise<(Map<string, number> | null)[]> {
-    return await Promise.all([1, 2, 3].map((i) => loadFrequencyMap(language, i)));
+async function loadScoringFrequencyMaps(language: string): Promise<(Map<string, number> | null)[]> {
+    return await Promise.all([1, 2, 3].map((i) => loadScoringFrequencyMap(language, i)));
 }
 
-export function scoreText(freqMaps: (Map<string, number> | null)[], text: string, language: string): number {
+export function _scoreText(freqMaps: (Map<string, number> | null)[], text: string, language: string): number {
     const scores: number[] = [];
 
     for (let i = 0; i < freqMaps.length; i++) {
@@ -140,9 +150,9 @@ export function scoreText(freqMaps: (Map<string, number> | null)[], text: string
     return scores.reduce((acc, score) => acc + score, 0);
 }
 
-export async function loadAndScoreText(language: string, text: string): Promise<number> {
-    const freqMaps = await loadFrequencyMaps(language);
-    return scoreText(freqMaps, text, language);
+export async function scoreText(language: string, text: string): Promise<number> {
+    const freqMaps = await loadScoringFrequencyMaps(language);
+    return _scoreText(freqMaps, text, language);
 }
 
 export type ScoreResult = {
@@ -150,8 +160,8 @@ export type ScoreResult = {
     scores: number[];
 }
 
-export function scoreTexts(freqMaps: (Map<string, number> | null)[], texts: string[], language: string): ScoreResult {
-    const scores = texts.map((text) => scoreText(freqMaps, text, language));
+export function _scoreTexts(freqMaps: (Map<string, number> | null)[], texts: string[], language: string): ScoreResult {
+    const scores = texts.map((text) => _scoreText(freqMaps, text, language));
     let best = 0;
     for (let i = 1; i < scores.length; i++) {
         if (scores[i] > scores[best]) {
@@ -165,7 +175,7 @@ export function scoreTexts(freqMaps: (Map<string, number> | null)[], texts: stri
     };
 }
 
-export async function loadAndScoreTexts(language: string, texts: string[]): Promise<ScoreResult> {
-    const freqMaps = await loadFrequencyMaps(language);
-    return scoreTexts(freqMaps, texts, language);
+export async function scoreTexts(language: string, texts: string[]): Promise<ScoreResult> {
+    const freqMaps = await loadScoringFrequencyMaps(language);
+    return _scoreTexts(freqMaps, texts, language);
 }
